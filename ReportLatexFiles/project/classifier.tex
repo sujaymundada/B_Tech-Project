@@ -1,0 +1,39 @@
+\chapter{Blind Pre-Processor Classifier}
+
+\section{Introduction}
+Modulation classification can be defined as the process of determining the modulation scheme of a noisy signal from a given set of possible schemes. This process has many applications in wireless communications, including in autonomous multimode and software defined radios. In most scenarios of interest, the difficulty in performing modulation classification is due primarily to the fact that classifiers operate with no or incomplete knowledge of the fading experienced by the signal and the distribution of the noise added in the channel. This is because a receiver typically has to first classify the received signal before it can successfully acquire symbol timing and estimate the channel state.The modulation classification operation can typically be divided into two stages. In the first, referred to as the pre- processing stage, the signal is acquired and different channel state and noise distribution parameters are estimated. With the obtained estimates, the signal is then classified in the second stage using an appropriate classification algorithm.
+
+\newpage
+\section{Applications}
+Modulation classification was first motivated by its application in military scenarios where electronic warfare, surveillance and threat analysis requires the recognition of signal modulations in order to identify adversary transmitting units, to prepare jamming signals, and to recover the intercepted signal.\\
+Link adaptation (LA), also known as adaptive modulation and coding (AM\&C), creates an adaptive modulation scheme where a pool of multiple modulations are employed by the same system. It enables the optimization of the transmission reliability and data rate through the adaptive selection of modulation schemes according to channel conditions. While the transmitter has the freedom to choose how the signals are modulated, the receiver must have the knowledge of the modulation type to demodulation the signal so that the transmission can be successful.\\
+An easy way to achieve that is to include the modulation information in each signal frame so that the receivers would be notified about the change in modulation scheme,and react accordingly. However, this strategy affects the spectrum efficiency and throughput due to the extra modulation information in each signal frame. In the current situation where the wireless spectrum is extremely limited and valuable, the aforementioned strategy is simply not efficient enough. For this reason, pre-processor classification becomes an attractive solution to the problem.
+
+\newpage
+\section{Implementation}
+We have used deep neural network(DNN) for the classification task. In DNN neurons are organized into layers: input, hidden and output. The input layer is composed not of full neurons, but rather consists simply of the record's values that are inputs to the next layer of neurons which are the I and Q components of the modulated received signal in our case. The next layer is the hidden layer. Several hidden layers can exist in one neural network, our network consists of 3 hidden layers with 256 neurons each. The final layer is the output layer, where there is one node for each class, 2 for our case. A single sweep forward through the network results in the assignment of a value to each output node which can be thought of as probability of detecting each class, and thus the record is assigned to the class node with the highest value probability. 
+
+\subsection{Data Set Generation \& Representation}
+The data set was generated using Octave. The data set comprises of 20000 data points each having 3 fields (I component, Q component and modulation class)
+
+\subsection{Training \& Loss Functions}
+The original data set is divided into 80 percent for training and 20 percent for testing. \\
+The batch size is 500 with 2000 iterations each and learning rate used is 0.001 .\\
+Loss function used is cross entropy loss function. 
+
+\newpage
+\section{Results \& Observation}
+We obtained 100 percent classification for classification of QPSK vs 16QAM. \\ 
+Using the channel model y= Hx + n given H we could use the same model with new training to obtain the same percentage classification. If H changes slowly with time as it happens practically we could train the old model using as fewer as 100 iterations and still obtain the same results.
+
+
+
+\section{Future Work}
+
+\begin{itemize}
+    \item Extend the model to together classify all the most frequently used 9 digital and 2 analog modulation techniques.
+    \item Try to train the network for a worse case impulsive noise training data and test for the gaussian noise cases.
+    \item Tap the individual hidden layers to find out what features are they extracting at each level. 
+    \item Use multiple samples of the same transmitted symbol and use Convolutional neural network to classify thereby using the correlation property between different samples of the same bit transmitted.
+    \item Try to use progressive learning so that the the system to predict the change of channel matrix H 
+\end{itemize}

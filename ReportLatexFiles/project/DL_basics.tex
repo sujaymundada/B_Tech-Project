@@ -1,0 +1,81 @@
+\chapter{Basics of Machine Learning}
+
+\section{Types of machine learning}
+
+
+\begin{equation}\nonumber
+Machine Learning 
+\begin{cases}
+\text{Supervised learning} 
+\begin{cases} 
+\text{Classification} \\ 
+\text{Regression} 
+\end{cases}\\
+\text{Unsupervised learning} 
+\begin{cases}
+\text{Discovering clusters} \\ 
+\text{Discovering latent factors} \\ 
+\text{Discovering graph structure} \\ 
+\text{Matrix completion} 
+\end{cases}\\
+\end{cases}
+\end{equation}
+
+
+\section{Three elements of a machine learning model}
+\paragraph{}Model = Representation + Evaluation + Optimization
+
+\subsection{Representation}
+\paragraph{}In supervised learning, a model must be represented as a conditional probability distribution $P(y|\vec{x})$ (usually we call it classifier) or a decision function $f(x)$. The set of classifiers(or decision functions) is called the hypothesis space of the model. Choosing a representation for a model is tantamount to choosing the hypothesis space that it can possibly learn. 
+
+
+\subsection{Evaluation}
+\paragraph{}In the hypothesis space, an evaluation function (also called objective function or risk function) is needed to distinguish good classifiers(or decision functions) from bad ones.
+
+
+\subsection{Loss function and risk function}
+
+\begin{definition}
+In order to measure how well a function fits the training data, a \textbf{loss function} $L:Y \times Y \rightarrow R \geq 0$ is defined. For training example $(x_i,y_i)$, the loss of predicting the value $\widehat{y}$ is $L(y_i,\widehat{y})$.
+\end{definition}
+
+The following is some common loss functions:
+\begin{enumerate}
+\item 0-1 loss function \\ $L(Y,f(X))=\mathbb{I}(Y,f(X))=\begin{cases} 1, & Y=f(X) \\ 0, & Y \neq f(X) \end{cases}$
+\item Quadratic loss function $L(Y,f(X))=\left(Y-f(X)\right)^2$
+\item Absolute loss function $L(Y,f(X))=\abs{Y-f(X)}$
+\item Logarithmic loss function \\ $L(Y,P(Y|X))=-\log{P(Y|X)}$
+\end{enumerate}
+
+\begin{definition}
+The risk of function $f$ is defined as the expected loss of $f$:
+\begin{equation}\label{eqn:expected-loss}
+R_{\mathrm{exp}}(f)=E\left[L\left(Y,f(X)\right)\right]=\int L\left(y,f(x)\right)P(x,y)\mathrm{d}x\mathrm{d}y
+\end{equation}
+which is also called expected loss or \textbf{risk function}.
+\end{definition}
+
+\begin{definition}
+The risk function $R_{\mathrm{exp}}(f)$ can be estimated from the training data as
+\begin{equation}
+R_{\mathrm{emp}}(f)=\dfrac{1}{N}\sum\limits_{i=1}^{N} L\left(y_i,f(x_i)\right)
+\end{equation}
+which is also called empirical loss or \textbf{empirical risk}.
+\end{definition}
+
+You can define your own loss function, but if you're a novice, you're probably better off using one from the literature. There are conditions that loss functions should meet:
+\begin{enumerate}
+\item They should approximate the actual loss you're trying to minimize. As was said in the other answer, the standard loss functions for classification is zero-one-loss (misclassification rate) and the ones used for training classifiers are approximations of that loss.
+\item The loss function should work with your intended optimization algorithm. That's why zero-one-loss is not used directly: it doesn't work with gradient-based optimization methods since it doesn't have a well-defined gradient (or even a subgradient, like the hinge loss for SVMs has).
+
+The main algorithm that optimizes the zero-one-loss directly is the old perceptron algorithm.
+\end{enumerate}
+
+\subsection{Optimization}
+Finally, we need a \textbf{training algorithm}(also called \textbf{learning algorithm} ) to search among the classifiers in the the hypothesis space for the highest-scoring one. The choice of optimization technique is key to the \textbf{efficiency} of the model.
+
+\section{Machine Learning Libraries}
+\paragraph{}In recent times, numerous tools and algorithms have emerged that make it easy to build and train large NNs. Tools to deploy such training routines from high level language to massively parallel GPU architectures have been key enablers. Among these are Caffe, MXNet, TensorFlow, Theano, and Torch (just to name a few), which allow for high level algorithm definition in various programming languages. We have used tensorflow to code the NNs in this paper. 
+
+
+
